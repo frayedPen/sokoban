@@ -10,6 +10,12 @@ const layout = [
 	"########",
 ];
 
+const WALL = "#",
+	BOX = "O",
+	SPOT = "+",
+	ON_SPOT = "0",
+	SPACE = " ";
+
 function replaceChar(origString, replaceChar, index) {
     let firstPart = origString.substr(0, index);
     let lastPart = origString.substr(index + 1);
@@ -20,8 +26,7 @@ function replaceChar(origString, replaceChar, index) {
 
 class Game {
 	constructor() {
-		this.level = [...layout];
-		this.player = {x: 2, y: 2};
+		this.restart();
 	}
 
 	moveUp() {
@@ -42,14 +47,37 @@ class Game {
 
 	move(deltaX, deltaY) {
 		try {
-			const block = this.getBlockAtPosition(this.player.x + deltaX, this.player.y + deltaY);
+			
+			const x = this.player.x + deltaX;
+			const y = this.player.y + deltaY;
+			const block = this.getBlockAtPosition(x, y);
 
 			console.assert(block != "" && block != " ", "Empty block");
 
-			this.player.x = this.player.x  + deltaX;
-			this.player.y = this.player.y  + deltaY;
+			// Check if wall
+			if(block == WALL) throw new error();;
+
+			// Check if box
+			if(block == BOX || block == ON_SPOT) {
+				// Check if there's empty space in the direction of pushing
+				const nextX = this.player.x + deltaX + deltaX;
+				const nextY = this.player.y + deltaY + deltaY;
+
+				const nextBlock = this.getBlockAtPosition(nextX, nextY);
+
+				if(nextBlock == SPACE || nextBlock == SPOT) {
+					// Move box forward and clear spaces behind it
+					this.level[nextY] = replaceChar(this.level[nextY], nextBlock == SPACE ? BOX : ON_SPOT, nextX);
+					this.level[y] = replaceChar(this.level[y], block == ON_SPOT ? SPOT : SPACE, x);
+				} else {
+					throw new error();
+				}
+			}
+
+			this.player.x = x;
+			this.player.y = y;
 		} catch(e) {
-			console.assert(true, "Out of bounds");
+			
 		}
 
 		this.renderResponse();
@@ -74,9 +102,15 @@ class Game {
 			}
 		});
 	}
+
+	restart() {
+		this.level = [...layout];
+		this.player = {x: 2, y: 2};
+	}
 }
 
 const game = new Game();
+game.renderResponse();
 
 const readline = require('node:readline');
 const rl = readline.createInterface({
@@ -106,9 +140,14 @@ const prompt = () => {
 			case "r":
 				game.moveRight();
 				break;
+
+			case "reset":
+			case "restart":
+				game.restart();
 			
 			case "exit":
 			case "leave":
+				r1.close();
 				return;
 		}
 		prompt();
