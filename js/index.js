@@ -14,18 +14,26 @@ const WALL = "#",
 	BOX = "O",
 	SPOT = "+",
 	ON_SPOT = "0",
-	SPACE = " ";
+	SPACE = " ",
+	PLAYER = "P";
 
 function replaceChar(origString, replaceChar, index) {
-    let firstPart = origString.substr(0, index);
-    let lastPart = origString.substr(index + 1);
-      
-    let newString = firstPart + replaceChar + lastPart;
-    return newString;
+    const firstPart = origString.substr(0, index);
+    const lastPart = origString.substr(index + 1);
+    return `${firstPart}${replaceChar}${lastPart}`;
 }
 
 class Game {
 	constructor() {
+		this.wins = [
+			{x:1, y:2},
+			{x:5, y:3},
+			{x:1, y:4},
+			{x:4, y:5},
+			{x:3, y:6},
+			{x:6, y:6},
+			{x:4, y:7},
+		];
 		this.restart();
 	}
 
@@ -46,13 +54,13 @@ class Game {
 	}
 
 	move(deltaX, deltaY) {
+		const x = this.player.x + deltaX;
+		const y = this.player.y + deltaY;
+
 		try {
-			
-			const x = this.player.x + deltaX;
-			const y = this.player.y + deltaY;
 			const block = this.getBlockAtPosition(x, y);
 
-			console.assert(block != "" && block != " ", "Empty block");
+			console.assert(block != "", "Empty block");
 
 			// Check if wall
 			if(block == WALL) throw new error();;
@@ -77,7 +85,7 @@ class Game {
 			this.player.x = x;
 			this.player.y = y;
 		} catch(e) {
-			
+			console.assert(this.player.x == x || this.player.y == y, "Player moved when it shouldn't haved");
 		}
 
 		this.renderResponse();
@@ -88,7 +96,8 @@ class Game {
 		if(!this.level[y][x]) throw new error("Doesn't exists");
 		
 		const c = this.level[y][x];
-		// console.assert((typeof c) != "string", "Level not 2D array of string");
+		console.assert(y >= 0 && y <= 8, "y out of bounds");
+		console.assert(x >= 0 && x <= 7, "x out of bounds");
 
 		return c;
 	}
@@ -96,16 +105,29 @@ class Game {
 	renderResponse() {
 		this.level.forEach((line, index) => {
 			if(index == this.player.y) {
-				console.log(replaceChar(line, "P", this.player.x));
+				console.log(replaceChar(line, PLAYER, this.player.x));
 			} else {
 				console.log(line);
 			}
 		});
+
+		if(this.checkWin()) {
+			console.log("You won!!!");
+		}
+		
+		console.log("");
 	}
 
 	restart() {
 		this.level = [...layout];
 		this.player = {x: 2, y: 2};
+	}
+
+	checkWin() {
+		return !this.wins.some(win => {
+			if(this.level[win.y][win.x] != ON_SPOT) return true;
+			return false;
+		});
 	}
 }
 
@@ -120,36 +142,36 @@ const rl = readline.createInterface({
 
 const prompt = () => {
 	rl.question(`Action: `, str => {
-		switch(str) {
-			case "up":
-			case "u":
-				game.moveUp();
-				break;
-				
-			case "down":
-			case "d":
-				game.moveDown();
-				break;
-
-			case "left":
-			case "l":
-				game.moveLeft();
-				break;
-
-			case "right":
-			case "r":
-				game.moveRight();
-				break;
-
-			case "reset":
-			case "restart":
-				game.restart();
-			
-			case "exit":
-			case "leave":
-				r1.close();
-				return;
+		if(str == "r" || str == "restart") {
+			game.restart();
+			prompt();
+			return;
 		}
+
+		if(str == "exit" || str == "leave") {
+			r1.close();
+			return;
+		}
+
+		str.split("").some(c => {
+			switch(c) {
+				case "w":
+					game.moveUp();
+					break;
+					
+				case "s":
+					game.moveDown();
+					break;
+
+				case "a":
+					game.moveLeft();
+					break;
+
+				case "d":
+					game.moveRight();
+					break;
+			}
+		});
 		prompt();
 	});
 }
