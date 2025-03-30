@@ -134,6 +134,8 @@ class Game {
 const game = new Game();
 game.renderResponse();
 
+console.log("Type w,a,s,d to move. Can type multiple characters to move. Write reset to restart.");
+
 const readline = require('node:readline');
 const rl = readline.createInterface({
 	input: process.stdin,
