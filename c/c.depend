@@ -1,5 +1,6 @@
 # depslib dependency file v1.0
-1743266104 source:c:\users\admin\documents\sokoban\c\main.c
+1743314053 source:c:\users\admin\documents\sokoban\c\main.c
 	<stdio.h>
 	<stdlib.h>
+	<stdbool.h>
 
