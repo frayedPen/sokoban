@@ -87,8 +87,6 @@ class Game {
 		} catch(e) {
 			console.assert(this.player.x == x || this.player.y == y, "Player moved when it shouldn't haved");
 		}
-
-		this.renderResponse();
 	}
 
 	getBlockAtPosition(x, y) {
@@ -112,7 +110,7 @@ class Game {
 		});
 
 		if(this.checkWin()) {
-			console.log("You won!!!");
+			console.log("You won! Type restart to restart.");
 		}
 		
 		console.log("");
@@ -132,9 +130,10 @@ class Game {
 }
 
 const game = new Game();
-game.renderResponse();
 
 console.log("Type w,a,s,d to move. Can type multiple characters to move. Write reset to restart.");
+
+game.renderResponse();
 
 const readline = require('node:readline');
 const rl = readline.createInterface({
@@ -144,8 +143,9 @@ const rl = readline.createInterface({
 
 const prompt = () => {
 	rl.question(`Action: `, str => {
-		if(str == "r" || str == "restart") {
+		if(str == "reset" || str == "restart") {
 			game.restart();
+			game.renderResponse();
 			prompt();
 			return;
 		}
@@ -174,6 +174,8 @@ const prompt = () => {
 					break;
 			}
 		});
+
+		game.renderResponse();
 		prompt();
 	});
 }

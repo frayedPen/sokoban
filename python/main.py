@@ -33,8 +33,6 @@ INVALID = "!"
 H = len(LAYOUT)
 W = len(LAYOUT[0])
 
-seq = ''
-
 FIRST_STEP_BLOCK = (INVALID, WALL)
 SECOND_STEP_BLOCK = (INVALID, WALL, BOX, ON_SPOT)
 
@@ -89,9 +87,6 @@ class Game:
 					elif c == "d":
 						self.move(1, 0)
 
-					global seq
-					seq += c
-
 		pass
 	
 	def getBlock(self, x, y):
@@ -142,7 +137,7 @@ class Game:
 		
 		if self.checkWin():
 			self.playing = False
-			print("You won!")
+			print("You won! Type restart to restart.")
 
 	def checkWin(self):
 		# Check if every box is in it's spot
@@ -150,7 +145,6 @@ class Game:
 			if self.level[win[1]][win[0]] != ON_SPOT:
 				return False
 		
-		print(seq)
 		return True
 
 
