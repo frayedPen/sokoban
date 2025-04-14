@@ -1,3 +1,5 @@
 cpp/obj/Debug/main.o
 cpp/bin/Debug/cpp.exe
 cpp/cpp.cbp
+cpp/cpp.layout
+.gitignore
