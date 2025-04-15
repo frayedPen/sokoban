@@ -3,3 +3,4 @@ cpp/bin/Debug/cpp.exe
 cpp/cpp.cbp
 cpp/cpp.layout
 .gitignore
+cpp/cpp.depend
