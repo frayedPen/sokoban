@@ -12,6 +12,8 @@ public static class Control
 
 	public static void Start()
 	{
+		Console.WriteLine("Type w,a,s,d to move. Can type multiple characters to move. Write reset to restart.");
+		
 		while(true)
 		{
 			Console.Write("Action: ");
