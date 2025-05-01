@@ -113,13 +113,13 @@
 		}
 
 		private function checkWin() {
-			if(level[2][1] == ON_SPOT &&
-				level[3][5] == ON_SPOT &&
-				level[4][1] == ON_SPOT &&
-				level[5][4] == ON_SPOT &&
-				level[6][3] == ON_SPOT &&
-				level[6][6] == ON_SPOT &&
-				level[7][4] == ON_SPOT) return true;
+			if($this->level[2][1] == ON_SPOT &&
+				$this->level[3][5] == ON_SPOT &&
+				$this->level[4][1] == ON_SPOT &&
+				$this->level[5][4] == ON_SPOT &&
+				$this->level[6][3] == ON_SPOT &&
+				$this->level[6][6] == ON_SPOT &&
+				$this->level[7][4] == ON_SPOT) return true;
 
 			return false;
 		}
